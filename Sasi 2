@@ -1,0 +1,66 @@
+##Temperature converter app
+
+import tkinter as tk
+from tkinter import ttk
+
+class TemperatureConverterApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Temperature Converter")
+
+        self.temperature_var = tk.DoubleVar()
+        self.from_unit_var = tk.StringVar()
+        self.to_unit_var = tk.StringVar()
+        self.result_var = tk.StringVar()
+
+        self.setup_ui()
+
+    def setup_ui(self):
+        ttk.Label(self.root, text="Temperature Converter", font=("Helvetica", 16)).pack(pady=10)
+
+        ttk.Label(self.root, text="Enter temperature:").pack()
+        ttk.Entry(self.root, textvariable=self.temperature_var).pack(pady=5)
+
+        ttk.Label(self.root, text="From:").pack()
+        ttk.Combobox(self.root, textvariable=self.from_unit_var, values=["Celsius", "Fahrenheit", "Kelvin"]).pack(pady=5)
+
+        ttk.Label(self.root, text="To:").pack()
+        ttk.Combobox(self.root, textvariable=self.to_unit_var, values=["Celsius", "Fahrenheit", "Kelvin"]).pack(pady=5)
+
+        ttk.Button(self.root, text="Convert", command=self.convert).pack(pady=10)
+
+        ttk.Label(self.root, text="Result:").pack()
+        ttk.Label(self.root, textvariable=self.result_var, font=("Helvetica", 14, "bold")).pack(pady=5)
+
+    def convert(self):
+        try:
+            temperature = self.temperature_var.get()
+            from_unit = self.from_unit_var.get()
+            to_unit = self.to_unit_var.get()
+
+            if from_unit == to_unit:
+                result = temperature
+            elif from_unit == "Celsius":
+                if to_unit == "Fahrenheit":
+                    result = (temperature * 9/5) + 32
+                else:
+                    result = temperature + 273.15
+            elif from_unit == "Fahrenheit":
+                if to_unit == "Celsius":
+                    result = (temperature - 32) * 5/9
+                else:
+                    result = ((temperature - 32) * 5/9) + 273.15
+            else:  # from_unit == "Kelvin"
+                if to_unit == "Celsius":
+                    result = temperature - 273.15
+                else:
+                    result = ((temperature - 273.15) * 9/5) + 32
+
+            self.result_var.set(f"{temperature:.2f} {from_unit} = {result:.2f} {to_unit}")
+        except ValueError:
+            self.result_var.set("Invalid input")
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = TemperatureConverterApp(root)
+    root.mainloop()
